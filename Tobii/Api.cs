@@ -1,17 +1,20 @@
 ﻿using Microsoft.Extensions.Logging;
 using Tobii.StreamEngine;
 
-namespace VRCFT.Tobii.Advanced;
+namespace VRCFT_Tobii_Advanced.Tobii;
 
-public class TobiiInterop : IDisposable
+public class Api : IDisposable
 {
-    private readonly IntPtr _api;
+    private readonly ILogger _logger;
+    private readonly nint _api;
 
-    public TobiiInterop(ILogger logger)
+    public Api(ILogger logger)
     {
+        _logger = logger;
+
         var tobiiLog = new tobii_custom_log_t
         {
-            log_func = delegate(IntPtr context, tobii_log_level_t level, string text)
+            log_func = delegate(nint _, tobii_log_level_t level, string text)
             {
                 var logLevel = level switch
                 {
@@ -27,41 +30,40 @@ public class TobiiInterop : IDisposable
             }
         };
 
-        tobii_error_t res = Interop.tobii_api_create(out _api, tobiiLog);
+        var res = Interop.tobii_api_create(out _api, tobiiLog);
         if (res != tobii_error_t.TOBII_ERROR_NO_ERROR)
         {
-            throw new Exception("Failed to create tobii API with error code " + res.ToString());
+            throw new Exception("Create API: " + res);
         }
     }
 
     public List<string> EnumerateDevices()
     {
-        List<string> urls;
-        var res = Interop.tobii_enumerate_local_device_urls(_api, out urls);
+        var res = Interop.tobii_enumerate_local_device_urls(_api, out var urls);
         if (res != tobii_error_t.TOBII_ERROR_NO_ERROR)
         {
-            throw new Exception("Failed to enumerate devices with error code " + res.ToString());
+            throw new Exception("Enumerate devices: " + res);
         }
 
         return urls;
     }
 
-    public TobiiDevice? CreateDevice(string url)
+    public Device CreateDevice(string url)
     {
-        return new TobiiDevice(_api, url);
+        return new Device(_logger, _api, url);
     }
 
-    public TobiiDevice? CreateDevice(string url, string license)
+    public Device CreateDevice(string url, string license)
     {
-        return new TobiiDevice(_api, url, license);
+        return new Device(_logger, _api, url, license);
     }
 
     public void Dispose()
     {
-        tobii_error_t res = Interop.tobii_api_destroy(_api);
+        var res = Interop.tobii_api_destroy(_api);
         if (res != tobii_error_t.TOBII_ERROR_NO_ERROR)
         {
-            throw new Exception("Failed to destroy tobii API with error code " + res.ToString());
+            throw new Exception("Destroy API: " + res);
         }
     }
 }

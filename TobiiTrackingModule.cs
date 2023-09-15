@@ -74,7 +74,7 @@ public class TobiiTrackingModule : ExtTrackingModule
         return (false, false);
     }
 
-    private float _minValidPupilDiameterMm;
+    private double _minValidPupilDiameterMm = 999f;
 
     public override void Update()
     {
@@ -99,7 +99,10 @@ public class TobiiTrackingModule : ExtTrackingModule
         UnifiedTracking.Data.Eye.Right.PupilDiameter_MM =
             data.Right.PupilDiameterIsValid ? data.Right.PupilDiameterMm : 0f;
 
-        // Update min dilation because it can be invalid.
+        // Overwrite the minimum pupil diameter, since if the headset is removed, VRCFT will set it to 0
+        // it will no longer be updated, even if the headset is put on again.
+        // So I'll overwrite the min diameter it is used independently every update, if it is valid and greater
+        // than the minimum threshold.
         const float minPupilDiameterThreshold = 1f;
         if (data.Left.PupilDiameterIsValid
             && data.Right.PupilDiameterIsValid
@@ -107,26 +110,13 @@ public class TobiiTrackingModule : ExtTrackingModule
             && data.Right.PupilDiameterMm > minPupilDiameterThreshold
            )
         {
-            _minValidPupilDiameterMm = Math.Min(_minValidPupilDiameterMm,
-                Math.Min(data.Left.PupilDiameterMm, data.Right.PupilDiameterMm));
+            _minValidPupilDiameterMm = Math.Min(_minValidPupilDiameterMm, (data.Left.PupilDiameterMm + data.Right.PupilDiameterMm) / 2.0);
         }
 
-        if (UnifiedTracking.Data.Eye._minDilation < _minValidPupilDiameterMm)
+        if (data.Left.PupilDiameterIsValid || data.Right.PupilDiameterIsValid)
         {
-            if (Math.Abs(UnifiedTracking.Data.Eye._minDilation - _minValidPupilDiameterMm) > 0.01f)
-            {
-                Logger.LogInformation(
-                    $"Min dilation changed from {UnifiedTracking.Data.Eye._minDilation} to {_minValidPupilDiameterMm}!");
-            }
-
-            UnifiedTracking.Data.Eye._minDilation = _minValidPupilDiameterMm;
+            UnifiedTracking.Data.Eye._minDilation = (float) _minValidPupilDiameterMm;
         }
-
-#if DEBUG
-        Logger.LogDebug($"Left: {UnifiedTracking.Data.Eye.Left.Gaze} {UnifiedTracking.Data.Eye.Left.Openness} {UnifiedTracking.Data.Eye.Left.PupilDiameter_MM}");
-        Logger.LogDebug($"Right: {UnifiedTracking.Data.Eye.Right.Gaze} {UnifiedTracking.Data.Eye.Right.Openness} {UnifiedTracking.Data.Eye.Right.PupilDiameter_MM}");
-        Logger.LogDebug($"Min dilation: {UnifiedTracking.Data.Eye._minDilation}");
-#endif
     }
 
     public override void Teardown()

@@ -1,5 +1,5 @@
 {
-  "ModuleId": "324b3cd5-5e64-4f3f-b056-12340badc0de", 
+  "ModuleId": "324b3cd5-5e64-4f3f-b056-12340badc0de",
   "LastUpdated": "2023-09-16T04:00:00Z",
   "Version": "0.9.0",
   "Downloads": 0,
@@ -8,7 +8,7 @@
   "AuthorName": "GhostIAm",
   "ModuleName": "Tobii Advanced",
   "ModuleDescription": "VRCFaceTracking module supporting Tobii(Pimax Crystal) advanced mode.",
-  "UsageInstructions": "Connect a tobii device!",
+  "UsageInstructions": "Just install and play. \nIf you need the \"advanced\" mode, then you need a valid license file. \nFor more details, see the README by clicking on the link in the \"Module Page\"",
   "DownloadUrl": "https://github.com/ghostiam/VRCFT-Tobii-Advanced/releases",
   "ModulePageUrl": "https://github.com/ghostiam/VRCFT-Tobii-Advanced",
   "DllFileName": "VRCFT-Tobii-Advanced.dll"

@@ -10,6 +10,7 @@
     <ItemGroup>
       <Reference Include="VRCFaceTracking.Core">
         <HintPath>Libs\VRCFaceTracking.Core.dll</HintPath>
+        <Private>False</Private>
       </Reference>
     </ItemGroup>
 
@@ -17,4 +18,18 @@
       <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Remove="license.example.json" />
+      <AdditionalFiles Include="license.example.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </AdditionalFiles>
+      <None Remove="module.json" />
+      <AdditionalFiles Include="module.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </AdditionalFiles>
+      <None Remove="tobii_stream_engine.dll" />
+      <AdditionalFiles Include="tobii_stream_engine.dll">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </AdditionalFiles>
+    </ItemGroup>
 </Project>

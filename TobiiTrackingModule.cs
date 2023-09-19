@@ -94,10 +94,11 @@ public class TobiiTrackingModule : ExtTrackingModule
         UnifiedTracking.Data.Eye.Left.Openness = data.Left.IsBlinkingIsValid ? (data.Left.IsBlink ? 0f : 1f) : 1f;
         UnifiedTracking.Data.Eye.Right.Openness = data.Right.IsBlinkingIsValid ? (data.Right.IsBlink ? 0f : 1f) : 1f;
 
-        UnifiedTracking.Data.Eye.Left.PupilDiameter_MM =
-            data.Left.PupilDiameterIsValid ? data.Left.PupilDiameterMm : 0f;
-        UnifiedTracking.Data.Eye.Right.PupilDiameter_MM =
-            data.Right.PupilDiameterIsValid ? data.Right.PupilDiameterMm : 0f;
+        if (data.Left.PupilDiameterIsValid)
+            UnifiedTracking.Data.Eye.Left.PupilDiameter_MM = data.Left.PupilDiameterMm;
+
+        if (data.Right.PupilDiameterIsValid)
+            UnifiedTracking.Data.Eye.Right.PupilDiameter_MM = data.Right.PupilDiameterMm;
 
         // Overwrite the minimum pupil diameter, since if the headset is removed, VRCFT will set it to 0
         // it will no longer be updated, even if the headset is put on again.
@@ -110,12 +111,13 @@ public class TobiiTrackingModule : ExtTrackingModule
             && data.Right.PupilDiameterMm > minPupilDiameterThreshold
            )
         {
-            _minValidPupilDiameterMm = Math.Min(_minValidPupilDiameterMm, (data.Left.PupilDiameterMm + data.Right.PupilDiameterMm) / 2.0);
+            _minValidPupilDiameterMm = Math.Min(_minValidPupilDiameterMm,
+                (data.Left.PupilDiameterMm + data.Right.PupilDiameterMm) / 2.0);
         }
 
         if (data.Left.PupilDiameterIsValid || data.Right.PupilDiameterIsValid)
         {
-            UnifiedTracking.Data.Eye._minDilation = (float) _minValidPupilDiameterMm;
+            UnifiedTracking.Data.Eye._minDilation = (float)_minValidPupilDiameterMm;
         }
     }
 

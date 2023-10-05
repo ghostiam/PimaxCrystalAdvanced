@@ -2,7 +2,7 @@
 using Tobii.StreamEngine;
 using VRCFaceTracking.Core.Types;
 
-namespace VRCFT_Tobii_Advanced.Tobii;
+namespace VRCFT_Tobii_Advanced.Tobii.Wearable;
 
 public class WearableAdvanced : IWearable
 {
@@ -75,8 +75,8 @@ public class WearableAdvanced : IWearable
                 dataLeft.gaze_direction_normalized_xyz.y),
             PupilDiameterIsValid = dataLeft.pupil_diameter_validity == tobii_validity_t.TOBII_VALIDITY_VALID,
             PupilDiameterMm = dataLeft.pupil_diameter_mm,
-            IsBlinkingIsValid = dataLeft.blink_validity == tobii_validity_t.TOBII_VALIDITY_VALID,
-            IsBlink = dataLeft.blink == tobii_state_bool_t.TOBII_STATE_BOOL_TRUE,
+            OpennessIsValid = dataLeft.blink_validity == tobii_validity_t.TOBII_VALIDITY_VALID,
+            Openness = dataLeft.blink == tobii_state_bool_t.TOBII_STATE_BOOL_TRUE ? 0f : 1f,
         };
 
         var dataRight = data.right;
@@ -87,8 +87,8 @@ public class WearableAdvanced : IWearable
                 dataRight.gaze_direction_normalized_xyz.y),
             PupilDiameterIsValid = dataRight.pupil_diameter_validity == tobii_validity_t.TOBII_VALIDITY_VALID,
             PupilDiameterMm = dataRight.pupil_diameter_mm,
-            IsBlinkingIsValid = dataRight.blink_validity == tobii_validity_t.TOBII_VALIDITY_VALID,
-            IsBlink = dataRight.blink == tobii_state_bool_t.TOBII_STATE_BOOL_TRUE,
+            OpennessIsValid = dataRight.blink_validity == tobii_validity_t.TOBII_VALIDITY_VALID,
+            Openness = dataRight.blink == tobii_state_bool_t.TOBII_STATE_BOOL_TRUE ? 0f : 1f,
         };
 
         var target = GCHandle.FromIntPtr(userData).Target;

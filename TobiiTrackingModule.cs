@@ -91,8 +91,8 @@ public class TobiiTrackingModule : ExtTrackingModule
         UnifiedTracking.Data.Eye.Right.Gaze =
             data.Right.GlazeDirectionIsValid ? data.Right.GlazeDirection : Vector2.zero;
 
-        UnifiedTracking.Data.Eye.Left.Openness = data.Left.IsBlinkingIsValid ? (data.Left.IsBlink ? 0f : 1f) : 1f;
-        UnifiedTracking.Data.Eye.Right.Openness = data.Right.IsBlinkingIsValid ? (data.Right.IsBlink ? 0f : 1f) : 1f;
+        UnifiedTracking.Data.Eye.Left.Openness = data.Left.OpennessIsValid ? data.Left.Openness : 1f;
+        UnifiedTracking.Data.Eye.Right.Openness = data.Right.OpennessIsValid ? data.Right.Openness : 1f;
 
         if (data.Left.PupilDiameterIsValid)
             UnifiedTracking.Data.Eye.Left.PupilDiameter_MM = data.Left.PupilDiameterMm;

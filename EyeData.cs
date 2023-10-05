@@ -1,6 +1,6 @@
 ﻿using VRCFaceTracking.Core.Types;
 
-namespace VRCFT_Tobii_Advanced.Tobii;
+namespace VRCFT_Tobii_Advanced;
 
 public struct EyeData
 {
@@ -12,8 +12,8 @@ public struct EyeData
         public bool PupilDiameterIsValid;
         public float PupilDiameterMm;
 
-        public bool IsBlinkingIsValid;
-        public bool IsBlink;
+        public bool OpennessIsValid;
+        public float Openness;
     }
 
     public Eye Left;

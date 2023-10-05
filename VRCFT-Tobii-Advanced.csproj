@@ -5,7 +5,7 @@
         <RootNamespace>VRCFT_Tobii_Advanced</RootNamespace>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <Version>0.9.1</Version>
+        <Version>0.10.0</Version>
         <Authors>GhostIAm</Authors>
         <PackageProjectUrl>https://github.com/ghostiam/VRCFT-Tobii-Advanced</PackageProjectUrl>
         <PackageLicenseUrl>https://github.com/ghostiam/VRCFT-Tobii-Advanced/blob/main/LICENSE</PackageLicenseUrl>
@@ -13,28 +13,29 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Reference Include="VRCFaceTracking.Core">
-        <HintPath>Libs\VRCFaceTracking.Core.dll</HintPath>
-        <Private>False</Private>
-      </Reference>
+        <Reference Include="VRCFaceTracking.Core">
+            <HintPath>Libs\VRCFaceTracking.Core.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0"/>
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.3"/>
     </ItemGroup>
 
     <ItemGroup>
-      <None Remove="license.example.json" />
-      <AdditionalFiles Include="license.example.json">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </AdditionalFiles>
-      <None Remove="module.json" />
-      <AdditionalFiles Include="module.json">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </AdditionalFiles>
-      <None Remove="tobii_stream_engine.dll" />
-      <AdditionalFiles Include="tobii_stream_engine.dll">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </AdditionalFiles>
+        <None Remove="license.example.json"/>
+        <AdditionalFiles Include="license.example.json">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </AdditionalFiles>
+        <None Remove="module.json"/>
+        <AdditionalFiles Include="module.json">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </AdditionalFiles>
+        <None Remove="tobii_stream_engine.dll"/>
+        <AdditionalFiles Include="tobii_stream_engine.dll">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </AdditionalFiles>
     </ItemGroup>
 </Project>

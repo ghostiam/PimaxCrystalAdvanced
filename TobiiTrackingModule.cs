@@ -1,6 +1,4 @@
-﻿using System.Reflection;
-using System.Runtime.InteropServices;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using VRCFaceTracking;
 using VRCFaceTracking.Core.Types;
 
@@ -8,11 +6,8 @@ namespace VRCFT_Tobii_Advanced;
 
 public class TobiiTrackingModule : ExtTrackingModule
 {
-    [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
-    private static extern bool SetDllDirectory(string? lpPathName);
-
-    private Tobii.Api? _tobii;
-    private Tobii.Device? _device;
+    private BrokenEye.Client? _beClient;
+    private Tobii.Client? _tobiiClient;
 
     public override (bool SupportsEye, bool SupportsExpression) Supported => (true, false);
 
@@ -21,75 +16,52 @@ public class TobiiTrackingModule : ExtTrackingModule
     {
         Logger.LogInformation("Initializing module...");
 
-        string? assemblyPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-        if (assemblyPath == null)
+        Logger.LogInformation("Try use BrokenEye API...");
+        _beClient = new BrokenEye.Client(Logger);
+        if (_beClient.Connect("127.0.0.1", 5555))
         {
-            Logger.LogError("Failed to get assembly path!");
-            return new ValueTuple<bool, bool>(false, false);
-        }
+            Logger.LogInformation("Connected to Broken Eye server!");
 
-        Logger.LogInformation("Adding assembly path to DLL search path: " + assemblyPath);
-        SetDllDirectory(assemblyPath);
-
-        Logger.LogInformation("Initializing Tobii...");
-
-        try
-        {
-            _tobii = new Tobii.Api(Logger);
-            IEnumerable<string> dev = _tobii.EnumerateDevices();
-            if (!dev.Any())
-            {
-                Logger.LogError("No devices found!");
-                return (false, false);
-            }
-
-            Logger.LogInformation(dev.Aggregate("Found devices: ", (current, d) => current + d + ", "));
-
-            var licensePath = Path.Combine(assemblyPath, "license.json");
-            bool hasLicense = File.Exists(licensePath);
-
-            if (hasLicense)
-            {
-                Logger.LogInformation("Loading license...");
-
-                var license = File.ReadAllText(licensePath);
-                _device = _tobii.CreateDevice(dev.First(), license);
-            }
-            else
-            {
-                Logger.LogInformation($"No license found in {licensePath}, using default license...");
-
-                _device = _tobii.CreateDevice(dev.First());
-            }
-
-            Logger.LogInformation("Done.");
+            _beClient.OnData += UpdateEyeData;
 
             return (true, false);
         }
-        catch (Exception e)
+
+        Logger.LogInformation("Failed to connect to Broken Eye server...");
+
+        Logger.LogInformation("Try use Tobii API...");
+        _tobiiClient = new Tobii.Client(Logger);
+        if (_tobiiClient.Connect())
         {
-            Logger.LogError("Error initializing Tobii: " + e.Message);
+            Logger.LogInformation("Connected to Tobii API!");
+
+            _tobiiClient.OnData += UpdateEyeData;
+
+            return (true, false);
         }
 
+        Logger.LogInformation("Failed to connect to Tobii...");
+
         return (false, false);
+    }
+
+    private Locked<EyeData> _currentEyeData = new(new EyeData());
+
+    private void UpdateEyeData(EyeData data)
+    {
+        _currentEyeData.Value = data;
     }
 
     private double _minValidPupilDiameterMm = 999f;
 
     public override void Update()
     {
-        if (_device == null)
-        {
-            return;
-        }
+        var data = _currentEyeData.Value;
 
-        _device.Update();
-
-        var data = _device.GetEyeData();
-
-        UnifiedTracking.Data.Eye.Left.Gaze = data.Left.GlazeDirectionIsValid ? data.Left.GlazeDirection : Vector2.zero;
+        UnifiedTracking.Data.Eye.Left.Gaze =
+            data.Left.GazeDirectionIsValid ? ToVrcftVector2(data.Left.GazeDirection) : Vector2.zero;
         UnifiedTracking.Data.Eye.Right.Gaze =
-            data.Right.GlazeDirectionIsValid ? data.Right.GlazeDirection : Vector2.zero;
+            data.Right.GazeDirectionIsValid ? ToVrcftVector2(data.Right.GazeDirection) : Vector2.zero;
 
         UnifiedTracking.Data.Eye.Left.Openness = data.Left.OpennessIsValid ? data.Left.Openness : 1f;
         UnifiedTracking.Data.Eye.Right.Openness = data.Right.OpennessIsValid ? data.Right.Openness : 1f;
@@ -121,9 +93,30 @@ public class TobiiTrackingModule : ExtTrackingModule
         }
     }
 
+    private static Vector2 ToVrcftVector2(EyeData.Vector2 v)
+    {
+        return new Vector2(v.X, v.Y);
+    }
+
     public override void Teardown()
     {
-        _device?.Dispose();
-        _tobii?.Dispose();
+        _beClient?.Dispose();
+        _tobiiClient?.Dispose();
+    }
+}
+
+// https://stackoverflow.com/a/73551350
+public struct Locked<T>
+{
+    public Locked(T value)
+    {
+        _value = value;
+    }
+    private T _value;
+    private readonly object _gate = new();
+    public T Value
+    {
+        get { lock (_gate) return _value; }
+        set { lock (_gate) _value = value; }
     }
 }

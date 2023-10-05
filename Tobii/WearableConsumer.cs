@@ -1,6 +1,5 @@
 ﻿using System.Runtime.InteropServices;
 using Tobii.StreamEngine;
-using VRCFaceTracking.Core.Types;
 
 namespace VRCFT_Tobii_Advanced.Tobii.Wearable;
 
@@ -8,12 +7,13 @@ public class WearableConsumer : IWearable
 {
     private readonly nint _device;
     private bool _isSubscribed;
-    private EyeData _eyeData;
 
     public WearableConsumer(nint device)
     {
         _device = device;
     }
+
+    public Action<EyeData>? OnData { get; set; }
 
     public void Subscribe()
     {
@@ -60,28 +60,26 @@ public class WearableConsumer : IWearable
         }
     }
 
-
-    public EyeData GetEyeData()
-    {
-        return _eyeData;
-    }
-
     private static void UpdateData(ref tobii_wearable_consumer_data_t data, nint userData)
     {
         var left = new EyeData.Eye
         {
-            GlazeDirectionIsValid = data.gaze_direction_combined_validity == tobii_validity_t.TOBII_VALIDITY_VALID,
-            GlazeDirection = new Vector2(-data.gaze_direction_combined_normalized_xyz.x,
-                data.gaze_direction_combined_normalized_xyz.y),
+            GazeDirectionIsValid = data.gaze_direction_combined_validity == tobii_validity_t.TOBII_VALIDITY_VALID,
+            GazeDirection = new EyeData.Vector2(
+                -data.gaze_direction_combined_normalized_xyz.x,
+                data.gaze_direction_combined_normalized_xyz.y
+            ),
             OpennessIsValid = data.left.blink_validity == tobii_validity_t.TOBII_VALIDITY_VALID,
             Openness = data.left.blink == tobii_state_bool_t.TOBII_STATE_BOOL_TRUE ? 0f : 1f,
         };
 
         var right = new EyeData.Eye
         {
-            GlazeDirectionIsValid = data.gaze_direction_combined_validity == tobii_validity_t.TOBII_VALIDITY_VALID,
-            GlazeDirection = new Vector2(-data.gaze_direction_combined_normalized_xyz.x,
-                data.gaze_direction_combined_normalized_xyz.y),
+            GazeDirectionIsValid = data.gaze_direction_combined_validity == tobii_validity_t.TOBII_VALIDITY_VALID,
+            GazeDirection = new EyeData.Vector2(
+                -data.gaze_direction_combined_normalized_xyz.x,
+                data.gaze_direction_combined_normalized_xyz.y
+            ),
             OpennessIsValid = data.right.blink_validity == tobii_validity_t.TOBII_VALIDITY_VALID,
             Openness = data.right.blink == tobii_state_bool_t.TOBII_STATE_BOOL_TRUE ? 0f : 1f,
         };
@@ -89,11 +87,9 @@ public class WearableConsumer : IWearable
         var target = GCHandle.FromIntPtr(userData).Target;
         if (target is WearableConsumer dev)
         {
-            dev._eyeData = new EyeData
             {
-                Left = left,
-                Right = right,
-            };
+                dev.OnData?.Invoke(new EyeData(left, right));
+            }
         }
     }
 

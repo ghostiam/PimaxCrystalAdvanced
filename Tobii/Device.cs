@@ -10,6 +10,8 @@ public class Device : IDisposable
     private readonly nint _device;
     private readonly IWearable? _wearable;
 
+    public event Action<EyeData>? OnData;
+
     public Device(ILogger logger, nint api, string deviceUrl, string license = "")
     {
         if (license != "")
@@ -24,15 +26,16 @@ public class Device : IDisposable
                 out _device);
             if (res != tobii_error_t.TOBII_ERROR_NO_ERROR || _device == nint.Zero)
             {
-                throw new Exception("Create Tobii device: " + res);
+                throw new Exception("Failed to create tobii device: " + res);
             }
 
             if (licenseResults.Count > 0 &&
                 licenseResults[0] == tobii_license_validation_result_t.TOBII_LICENSE_VALIDATION_RESULT_OK)
             {
-                logger.LogInformation("Subscribe to advanced data.");
+                logger.LogInformation("Subscribed to advanced data.");
 
                 _wearable = new WearableAdvanced(_device);
+                _wearable.OnData += data => OnData?.Invoke(data);
                 _wearable.Subscribe();
                 return;
             }
@@ -45,11 +48,11 @@ public class Device : IDisposable
                 Interop.tobii_field_of_use_t.TOBII_FIELD_OF_USE_INTERACTIVE, out _device);
             if (res != tobii_error_t.TOBII_ERROR_NO_ERROR || _device == nint.Zero)
             {
-                throw new Exception("Create Tobii device: " + res);
+                throw new Exception("Failed to create tobii device: " + res);
             }
         }
 
-        logger.LogInformation("Subscribe to consumer data.");
+        logger.LogInformation("Subscribed to consumer data.");
 
         _wearable = new WearableConsumer(_device);
         _wearable.Subscribe();
@@ -67,12 +70,7 @@ public class Device : IDisposable
         tobii_error_t res = Interop.tobii_device_destroy(_device);
         if (res != tobii_error_t.TOBII_ERROR_NO_ERROR)
         {
-            throw new Exception("Destroy tobii device: " + res);
+            throw new Exception("Failed to destroyed tobii device: " + res);
         }
-    }
-
-    public EyeData GetEyeData()
-    {
-        return _wearable?.GetEyeData() ?? default;
     }
 }

@@ -16,7 +16,8 @@ Tested on [Pimax Crystal](https://pimax.com/crystal/?ref=ghostiam).
 ### How to use the "advanced" mode.
 
 > [!IMPORTANT]
-> You must have a file with a valid license, otherwise the module will not work in "advanced" mode!
+> You must have a file with a valid license, otherwise the module will not work in "advanced" mode!\
+> Or you can use the workaround: [Broken Eye](https://github.com/ghostiam/BrokenEye) (Pimax Crystal only)
 
 By default, the module is loaded without a license, which allows you to use it
 to track combined gaze direction and eye opening/closing.
@@ -77,3 +78,11 @@ It means you are using an invalid license, check its content.
 ![I don't know](https://www.meme-arsenal.com/memes/087bd8289778ed9f50fb7f4ec1e23dab.jpg)
 
 Most likely you can only wait until the manufacturer of the device you are using gets a license from Tobii.
+
+### How to use the "advanced" mode without a license.
+
+There is a workaround that will allow you to obtain data on the direction of gaze for each eye separately, the diameter
+of the pupil, and even receive images from cameras! And all this without a “professional” license!
+
+The software is called [Broken Eye](https://github.com/ghostiam/BrokenEye) and can be downloaded 
+[here](https://github.com/ghostiam/BrokenEye/releases/latest) (currently only works for Pimax Crystal).

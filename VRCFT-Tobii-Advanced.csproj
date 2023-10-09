@@ -5,11 +5,12 @@
         <RootNamespace>VRCFT_Tobii_Advanced</RootNamespace>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <Version>0.10.0</Version>
+        <Version>0.11.0</Version>
         <Authors>GhostIAm</Authors>
         <PackageProjectUrl>https://github.com/ghostiam/VRCFT-Tobii-Advanced</PackageProjectUrl>
         <PackageLicenseUrl>https://github.com/ghostiam/VRCFT-Tobii-Advanced/blob/main/LICENSE</PackageLicenseUrl>
         <RepositoryUrl>https://github.com/ghostiam/VRCFT-Tobii-Advanced</RepositoryUrl>
+        <Platforms>AnyCPU;x64</Platforms>
     </PropertyGroup>
 
     <ItemGroup>

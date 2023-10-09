@@ -1,9 +1,9 @@
 ﻿using System.Net;
 using System.Net.Sockets;
 using System.Text;
-using System;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace VRCFT_Tobii_Advanced.BrokenEye;
 
@@ -150,7 +150,15 @@ public class Client : IDisposable
 
         try
         {
-            var eyeData = JsonConvert.DeserializeObject<EyeData>(dataString);
+            DefaultContractResolver contractResolver = new DefaultContractResolver
+            {
+                NamingStrategy = new SnakeCaseNamingStrategy()
+            };
+            var eyeData = JsonConvert.DeserializeObject<EyeData>(dataString, new JsonSerializerSettings
+            {
+                ContractResolver = contractResolver,
+                Formatting = Formatting.Indented
+            });
 
             // Flip X axis
             eyeData.Left.GazeDirection.X = -eyeData.Left.GazeDirection.X;

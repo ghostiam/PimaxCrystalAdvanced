@@ -1,10 +1,11 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+﻿using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace VRCFT_Tobii_Advanced;
 
 public struct EyeData
 {
+    [JsonConverter(typeof(Vector2MethodConverter))]
     public struct Vector2
     {
         public Vector2(float x, float y)
@@ -17,20 +18,39 @@ public struct EyeData
         public float Y;
     }
 
+
     public struct Eye
     {
+        [JsonInclude]
+        [JsonPropertyName("gaze_direction_is_valid")]
         public bool GazeDirectionIsValid;
-        [JsonConverter(typeof(Vector2MethodConverter))]
+
+        [JsonInclude]
+        [JsonPropertyName("gaze_direction")]
         public Vector2 GazeDirection;
 
+        [JsonInclude]
+        [JsonPropertyName("pupil_diameter_is_valid")]
         public bool PupilDiameterIsValid;
+
+        [JsonInclude]
+        [JsonPropertyName("pupil_diameter_mm")]
         public float PupilDiameterMm;
 
+        [JsonInclude]
+        [JsonPropertyName("openness_is_valid")]
         public bool OpennessIsValid;
+
+        [JsonInclude]
+        [JsonPropertyName("openness")]
         public float Openness;
     }
 
+    [JsonInclude]
+    [JsonPropertyName("left")]
     public Eye Left;
+    [JsonInclude]
+    [JsonPropertyName("right")]
     public Eye Right;
 
     public EyeData(Eye left, Eye right)
@@ -40,49 +60,38 @@ public struct EyeData
     }
 }
 
-public class Vector2MethodConverter : JsonConverter
-{
-    public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
-    {
-        if (value is EyeData.Vector2 vector2)
-        {
-            writer.WriteStartArray();
-            writer.WriteValue(vector2.X);
-            writer.WriteValue(vector2.Y);
-            writer.WriteEndArray();
-        }
-        else
-        {
-            throw new JsonWriterException($"Unexpected type {value?.GetType()}");
-        }
-    }
 
-    public override object ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
+public class Vector2MethodConverter : JsonConverter<EyeData.Vector2>
+{
+    public override EyeData.Vector2 Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
-        if (reader.TokenType == JsonToken.Null)
+        if (reader.TokenType == JsonTokenType.Null)
         {
             return new EyeData.Vector2();
         }
 
-        if (reader.TokenType != JsonToken.StartArray)
+        if (reader.TokenType != JsonTokenType.StartArray)
         {
-            throw new JsonReaderException($"Unexpected token {reader.TokenType}");
+            throw new JsonException($"Unexpected token {reader.TokenType}");
         }
 
-        var array = JArray.Load(reader);
-        if (array.Count < 2)
+        var array = JsonSerializer.Deserialize<float[]>(ref reader, options);
+        if (array == null || array.Length < 2)
         {
-            throw new JsonReaderException($"Expected array of length 2, got {array.Count}");
+            throw new JsonException($"Expected array of length 2, got {array?.Length}");
         }
 
-        var x = array[0].ToObject<float>();
-        var y = array[1].ToObject<float>();
+        var x = array[0];
+        var y = array[1];
 
         return new EyeData.Vector2(x, y);
     }
 
-    public override bool CanConvert(Type objectType)
+    public override void Write(Utf8JsonWriter writer, EyeData.Vector2 value, JsonSerializerOptions options)
     {
-        return objectType == typeof(EyeData.Vector2);
+        writer.WriteStartArray();
+        writer.WriteNumberValue(value.X);
+        writer.WriteNumberValue(value.Y);
+        writer.WriteEndArray();
     }
 }

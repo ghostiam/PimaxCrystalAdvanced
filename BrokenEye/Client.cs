@@ -2,8 +2,7 @@
 using System.Net.Sockets;
 using System.Text;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
+using System.Text.Json;
 
 namespace VRCFT_Tobii_Advanced.BrokenEye;
 
@@ -146,19 +145,17 @@ public class Client : IDisposable
             throw new Exception("Failed to read data");
         }
 
-        var dataString = Encoding.UTF8.GetString(data);
+        var jsonString = Encoding.UTF8.GetString(data);
 
         try
         {
-            DefaultContractResolver contractResolver = new DefaultContractResolver
+            EyeData? eyeDataValue = JsonSerializer.Deserialize<EyeData>(jsonString);
+            if (!eyeDataValue.HasValue)
             {
-                NamingStrategy = new SnakeCaseNamingStrategy()
-            };
-            var eyeData = JsonConvert.DeserializeObject<EyeData>(dataString, new JsonSerializerSettings
-            {
-                ContractResolver = contractResolver,
-                Formatting = Formatting.Indented
-            });
+                throw new Exception("Failed to deserialize data");
+            }
+
+            var eyeData = eyeDataValue.Value;
 
             // Flip X axis
             eyeData.Left.GazeDirection.X = -eyeData.Left.GazeDirection.X;
@@ -168,7 +165,7 @@ public class Client : IDisposable
         }
         catch (Exception e)
         {
-            _logger.LogError($"Failed to deserialize data ({e.Message}): {dataString}");
+            _logger.LogError($"Failed to deserialize data ({e.Message}): {jsonString}");
             throw;
         }
     }

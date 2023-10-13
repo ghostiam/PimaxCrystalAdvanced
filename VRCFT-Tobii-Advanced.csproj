@@ -5,7 +5,7 @@
         <RootNamespace>VRCFT_Tobii_Advanced</RootNamespace>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <Version>0.11.1</Version>
+        <Version>0.11.2</Version>
         <Authors>GhostIAm</Authors>
         <PackageProjectUrl>https://github.com/ghostiam/VRCFT-Tobii-Advanced</PackageProjectUrl>
         <PackageLicenseUrl>https://github.com/ghostiam/VRCFT-Tobii-Advanced/blob/main/LICENSE</PackageLicenseUrl>
@@ -22,7 +22,6 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0"/>
-        <PackageReference Include="Newtonsoft.Json" Version="13.0.3"/>
     </ItemGroup>
 
     <ItemGroup>

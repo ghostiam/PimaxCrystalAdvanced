@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System.Threading.Channels;
+using Microsoft.Extensions.Logging;
 using VRCFaceTracking;
 using VRCFaceTracking.Core.Types;
 
@@ -45,18 +46,22 @@ public class TobiiTrackingModule : ExtTrackingModule
         return (false, false);
     }
 
-    private Locked<EyeData> _currentEyeData = new(new EyeData());
+    private readonly Channel<EyeData> _eyeDataChannel = Channel.CreateUnbounded<EyeData>();
 
     private void UpdateEyeData(EyeData data)
     {
-        _currentEyeData.Value = data;
+        _eyeDataChannel.Writer.TryWrite(data);
     }
 
     private double _minValidPupilDiameterMm = 999f;
 
     public override void Update()
     {
-        var data = _currentEyeData.Value;
+        var task = _eyeDataChannel.Reader.ReadAsync().AsTask();
+        // We block the loop and wait for data, since a wasted spinning loop eats up a lot of CPU.
+        task.Wait();
+
+        var data = task.Result;
 
         UnifiedTracking.Data.Eye.Left.Gaze =
             data.Left.GazeDirectionIsValid ? ToVrcftVector2(data.Left.GazeDirection) : Vector2.zero;
@@ -102,21 +107,5 @@ public class TobiiTrackingModule : ExtTrackingModule
     {
         _beClient?.Dispose();
         _tobiiClient?.Dispose();
-    }
-}
-
-// https://stackoverflow.com/a/73551350
-public struct Locked<T>
-{
-    public Locked(T value)
-    {
-        _value = value;
-    }
-    private T _value;
-    private readonly object _gate = new();
-    public T Value
-    {
-        get { lock (_gate) return _value; }
-        set { lock (_gate) _value = value; }
     }
 }

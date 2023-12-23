@@ -3,9 +3,9 @@ using Microsoft.Extensions.Logging;
 using VRCFaceTracking;
 using VRCFaceTracking.Core.Types;
 
-namespace VRCFT_Tobii_Advanced;
+namespace PimaxCrystalAdvanced;
 
-public class TobiiTrackingModule : ExtTrackingModule
+public class PimaxCrystalAdvanced : ExtTrackingModule
 {
     private BrokenEye.Client? _beClient;
     private Tobii.Client? _tobiiClient;

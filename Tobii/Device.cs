@@ -1,9 +1,8 @@
 ﻿using System.Runtime.InteropServices;
 using Microsoft.Extensions.Logging;
 using Tobii.StreamEngine;
-using VRCFT_Tobii_Advanced.Tobii.Wearable;
 
-namespace VRCFT_Tobii_Advanced.Tobii;
+namespace PimaxCrystalAdvanced.Tobii;
 
 public class Device : IDisposable
 {

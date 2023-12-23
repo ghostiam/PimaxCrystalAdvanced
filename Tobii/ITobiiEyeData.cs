@@ -1,4 +1,4 @@
-﻿namespace VRCFT_Tobii_Advanced.Tobii;
+﻿namespace PimaxCrystalAdvanced.Tobii;
 
 internal interface ITobiiEyeData : IDisposable
 {

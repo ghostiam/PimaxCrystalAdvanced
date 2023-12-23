@@ -1,12 +1,11 @@
-## Tobii Eye Tracking Module for VRCFaceTracking
+## Pimax Crystal Advanced Eye Tracking Module for VRCFaceTracking
 
-A module for working with Tobii Eye Tracking in VRCFaceTracking.\
-Tested on [Pimax Crystal](https://pimax.com/crystal/?ref=ghostiam).
+A module for working with [Pimax Crystal](https://pimax.com/crystal/?ref=ghostiam) Eye Tracking in VRCFaceTracking.
 
 ### Usage
 
 - Download and install [VRCFaceTracking](https://github.com/benaclejames/VRCFaceTracking)
-- Download the archive with the module from [release](https://github.com/ghostiam/VRCFT-Tobii-Advanced/releases/latest)
+- Download the archive with the module from [release](https://github.com/ghostiam/PimaxCrystalAdvanced/releases/latest)
 - Run VRCFaceTracking
 - Go to the "Module Registry" tab
 - Click "+ Install Module From .zip"
@@ -48,17 +47,17 @@ After launching VRCFaceTracking, make sure that the module has loaded your licen
 
 ```
 ...
-[TobiiTrackingModule] Information: Loading license...
-[TobiiTrackingModule] Information: Creating device with license.
-[TobiiTrackingModule] Information: Connected to platform module with build version "<version>"
-[TobiiTrackingModule] Information: Subscribe to advanced data.
+[PimaxCrystalAdvanced] Information: Loading license...
+[PimaxCrystalAdvanced] Information: Creating device with license.
+[PimaxCrystalAdvanced] Information: Connected to platform module with build version "<version>"
+[PimaxCrystalAdvanced] Information: Subscribe to advanced data.
 ...
 ```
 
 If instead you see:
 
 ```
-[TobiiTrackingModule] Information: No license found in <redacted>
+[PimaxCrystalAdvanced] Information: No license found in <redacted>
 ```
 
 It means the license was not found, check the path and file name.
@@ -67,7 +66,7 @@ And if you see:
 
 ```
 ...
-[TobiiTrackingModule] Warning: License validation failed: TOBII_LICENSE_VALIDATION_RESULT_TAMPERED
+[PimaxCrystalAdvanced] Warning: License validation failed: TOBII_LICENSE_VALIDATION_RESULT_TAMPERED
 ...
 ```
 

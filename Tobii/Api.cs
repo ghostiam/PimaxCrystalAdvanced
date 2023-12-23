@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Tobii.StreamEngine;
 
-namespace VRCFT_Tobii_Advanced.Tobii;
+namespace PimaxCrystalAdvanced.Tobii;
 
 public class Api : IDisposable
 {

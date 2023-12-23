@@ -2,13 +2,13 @@
 
     <PropertyGroup>
         <TargetFramework>net7.0</TargetFramework>
-        <RootNamespace>VRCFT_Tobii_Advanced</RootNamespace>
+        <RootNamespace>PimaxCrystalAdvanced</RootNamespace>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <Version>0.12.0</Version>
         <Authors>GhostIAm</Authors>
-        <PackageProjectUrl>https://github.com/ghostiam/VRCFT-Tobii-Advanced</PackageProjectUrl>
-        <PackageLicenseUrl>https://github.com/ghostiam/VRCFT-Tobii-Advanced/blob/main/LICENSE</PackageLicenseUrl>
+        <PackageProjectUrl>https://github.com/ghostiam/PimaxCrystalAdvanced</PackageProjectUrl>
+        <PackageLicenseUrl>https://github.com/ghostiam/PimaxCrystalAdvanced/blob/main/LICENSE</PackageLicenseUrl>
         <RepositoryUrl>https://github.com/ghostiam/VRCFT-Tobii-Advanced</RepositoryUrl>
         <Platforms>AnyCPU;x64</Platforms>
     </PropertyGroup>

@@ -3,7 +3,7 @@ using Tobii.StreamEngine;
 
 namespace VRCFT_Tobii_Advanced.Tobii.Wearable;
 
-public class WearableConsumer : IWearable
+public class WearableConsumer : ITobiiEyeData
 {
     private readonly nint _device;
     private bool _isSubscribed;

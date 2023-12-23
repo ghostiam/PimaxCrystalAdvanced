@@ -8,7 +8,7 @@ namespace VRCFT_Tobii_Advanced.Tobii;
 public class Device : IDisposable
 {
     private readonly nint _device;
-    private readonly IWearable? _wearable;
+    private readonly ITobiiEyeData? _wearable;
 
     public event Action<EyeData>? OnData;
 

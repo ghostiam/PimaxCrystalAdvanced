@@ -1,6 +1,6 @@
 ﻿namespace VRCFT_Tobii_Advanced.Tobii;
 
-internal interface IWearable : IDisposable
+internal interface ITobiiEyeData : IDisposable
 {
     public Action<EyeData>? OnData { get; set; }
     void Subscribe();

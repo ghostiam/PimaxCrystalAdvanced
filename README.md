@@ -1,3 +1,10 @@
+> [!CAUTION]
+> If you haven't purchased Pimax Crystal yet. \
+> **I DO NOT RECOMMEND YOU BUYING IT!** \
+> Save your nerves and money, avoid the Pimax company. \
+> Promises are not kept! They release a new headset without fixing the old one! \
+> Even I can’t get a refund for a faulty headset.
+
 ## Pimax Crystal Advanced Eye Tracking Module for VRCFaceTracking
 
 A module for working with [Pimax Crystal](https://pimax.com/crystal/?ref=ghostiam) Eye Tracking in VRCFaceTracking.

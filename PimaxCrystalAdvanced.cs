@@ -60,7 +60,7 @@ public class PimaxCrystalAdvanced : ExtTrackingModule
     {
         var task = _eyeDataChannel.Reader.ReadAsync().AsTask();
         // We block the loop and wait for data, since a wasted spinning loop eats up a lot of CPU.
-        task.Wait();
+        task.Wait(TimeSpan.FromMilliseconds(100));
 
         var data = task.Result;
 

@@ -5,7 +5,7 @@
         <RootNamespace>PimaxCrystalAdvanced</RootNamespace>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <Version>0.12.0</Version>
+        <Version>1.1.0</Version>
         <Authors>GhostIAm</Authors>
         <PackageProjectUrl>https://github.com/ghostiam/PimaxCrystalAdvanced</PackageProjectUrl>
         <PackageLicenseUrl>https://github.com/ghostiam/PimaxCrystalAdvanced/blob/main/LICENSE</PackageLicenseUrl>

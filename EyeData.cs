@@ -44,6 +44,18 @@ public struct EyeData
         [JsonInclude]
         [JsonPropertyName("openness")]
         public float Openness;
+
+        [JsonInclude]
+        [JsonPropertyName("wide")]
+        public float Wide;
+
+        [JsonInclude]
+        [JsonPropertyName("squeeze")]
+        public float Squeeze;
+
+        [JsonInclude]
+        [JsonPropertyName("frown")]
+        public float Frown;
     }
 
     [JsonInclude]

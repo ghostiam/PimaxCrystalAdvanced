@@ -54,7 +54,7 @@ public class Client : IDisposable
     private async void HandleAsyncData()
     {
         var reconnectAttempts = 0;
-        const int maxReconnectAttempts = 5;
+        const int maxReconnectAttempts = 50;
 
         while (true)
         {

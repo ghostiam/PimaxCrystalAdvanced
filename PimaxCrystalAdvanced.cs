@@ -1,6 +1,7 @@
 ﻿using System.Threading.Channels;
 using Microsoft.Extensions.Logging;
 using VRCFaceTracking;
+using VRCFaceTracking.Core.Params.Data;
 using VRCFaceTracking.Core.Types;
 
 namespace PimaxCrystalAdvanced;
@@ -96,6 +97,24 @@ public class PimaxCrystalAdvanced : ExtTrackingModule
         {
             UnifiedTracking.Data.Eye._minDilation = (float)_minValidPupilDiameterMm;
         }
+
+        UpdateEyeExpressions(ref UnifiedTracking.Data.Shapes, data);
+    }
+
+    private void UpdateEyeExpressions(ref UnifiedExpressionShape[] data, EyeData external)
+    {
+        data[3].Weight = external.Left.Wide;
+        data[2].Weight = external.Right.Wide;
+        data[1].Weight = external.Left.Squeeze;
+        data[0].Weight = external.Right.Squeeze;
+        data[9].Weight = external.Left.Wide;
+        data[11].Weight = external.Left.Wide;
+        data[8].Weight = external.Right.Wide;
+        data[10].Weight = external.Right.Wide;
+        data[5].Weight = external.Left.Squeeze;
+        data[7].Weight = external.Left.Squeeze;
+        data[4].Weight = external.Right.Squeeze;
+        data[6].Weight = external.Right.Squeeze;
     }
 
     private static Vector2 ToVrcftVector2(EyeData.Vector2 v)

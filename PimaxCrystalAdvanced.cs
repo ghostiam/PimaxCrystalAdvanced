@@ -10,7 +10,8 @@ public class PimaxCrystalAdvanced : ExtTrackingModule
 {
     private BrokenEye.Client? _beClient;
     private Tobii.Client? _tobiiClient;
-
+    private static readonly LowPassFilter noiseFilterRight = new(10);
+    private static readonly LowPassFilter noiseFilterLeft = new(10);
     public override (bool SupportsEye, bool SupportsExpression) Supported => (true, false);
 
     public override (bool eyeSuccess, bool expressionSuccess) Initialize(bool eyeAvailable,
@@ -70,8 +71,17 @@ public class PimaxCrystalAdvanced : ExtTrackingModule
         if (data.Right.GazeDirectionIsValid)
             UnifiedTracking.Data.Eye.Right.Gaze = data.Right.GazeDirection.ToVRCFT().FlipXCoordinates();
 
-        UnifiedTracking.Data.Eye.Left.Openness = data.Left.OpennessIsValid ? data.Left.Openness : 1f;
-        UnifiedTracking.Data.Eye.Right.Openness = data.Right.OpennessIsValid ? data.Right.Openness : 1f;
+        if (data.Left.OpennessIsValid)
+        {
+            noiseFilterLeft.FilterValue(ref data.Left.Openness);
+            UnifiedTracking.Data.Eye.Left.Openness = noiseFilterLeft.Value;
+        }
+
+        if (data.Right.OpennessIsValid)
+        {
+            noiseFilterRight.FilterValue(ref data.Right.Openness);
+            UnifiedTracking.Data.Eye.Right.Openness = noiseFilterRight.Value;
+        }
 
         if (data.Left.PupilDiameterIsValid)
             UnifiedTracking.Data.Eye.Left.PupilDiameter_MM = data.Left.PupilDiameterMm;

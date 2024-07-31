@@ -156,11 +156,6 @@ public class Client : IDisposable
             }
 
             var eyeData = eyeDataValue.Value;
-
-            // Flip X axis
-            eyeData.Left.GazeDirection.X = -eyeData.Left.GazeDirection.X;
-            eyeData.Right.GazeDirection.X = -eyeData.Right.GazeDirection.X;
-
             OnData?.Invoke(eyeData);
         }
         catch (Exception e)

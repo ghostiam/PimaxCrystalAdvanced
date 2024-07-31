@@ -64,10 +64,11 @@ public class PimaxCrystalAdvanced : ExtTrackingModule
 
         var data = task.Result;
 
-        UnifiedTracking.Data.Eye.Left.Gaze =
-            data.Left.GazeDirectionIsValid ? ToVrcftVector2(data.Left.GazeDirection) : Vector2.zero;
-        UnifiedTracking.Data.Eye.Right.Gaze =
-            data.Right.GazeDirectionIsValid ? ToVrcftVector2(data.Right.GazeDirection) : Vector2.zero;
+        if (data.Left.GazeDirectionIsValid)
+            UnifiedTracking.Data.Eye.Left.Gaze = data.Left.GazeDirection.ToVRCFT().FlipXCoordinates();
+
+        if (data.Right.GazeDirectionIsValid)
+            UnifiedTracking.Data.Eye.Right.Gaze = data.Right.GazeDirection.ToVRCFT().FlipXCoordinates();
 
         UnifiedTracking.Data.Eye.Left.Openness = data.Left.OpennessIsValid ? data.Left.Openness : 1f;
         UnifiedTracking.Data.Eye.Right.Openness = data.Right.OpennessIsValid ? data.Right.Openness : 1f;

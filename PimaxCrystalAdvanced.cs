@@ -17,6 +17,11 @@ public class PimaxCrystalAdvanced : ExtTrackingModule
     public override (bool eyeSuccess, bool expressionSuccess) Initialize(bool eyeAvailable,
         bool expressionAvailable)
     {
+        ModuleInformation = new ModuleMetadata()
+        {
+            Name = "BrokenEye",
+        };
+
         Logger.LogInformation("Initializing module...");
 
         Logger.LogInformation("Try use BrokenEye API...");

@@ -10,8 +10,8 @@ public class PimaxCrystalAdvanced : ExtTrackingModule
 {
     private BrokenEye.Client? _beClient;
     private Tobii.Client? _tobiiClient;
-    private static readonly LowPassFilter noiseFilterRight = new(10);
-    private static readonly LowPassFilter noiseFilterLeft = new(10);
+    private static readonly LowPassFilter noiseFilterRight = new(15);
+    private static readonly LowPassFilter noiseFilterLeft = new(15);
     public override (bool SupportsEye, bool SupportsExpression) Supported => (true, false);
 
     public override (bool eyeSuccess, bool expressionSuccess) Initialize(bool eyeAvailable,

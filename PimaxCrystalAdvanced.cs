@@ -1,8 +1,10 @@
-﻿using System.Threading.Channels;
+﻿using System.Reflection;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.Threading.Channels;
 using Microsoft.Extensions.Logging;
 using VRCFaceTracking;
 using VRCFaceTracking.Core.Params.Data;
-using VRCFaceTracking.Core.Types;
 
 namespace PimaxCrystalAdvanced;
 
@@ -20,12 +22,23 @@ public class PimaxCrystalAdvanced : ExtTrackingModule
     {
         Logger.LogInformation("Initializing module...");
 
-        _noiseFilterRight = new LowPassFilter(15);
-        _noiseFilterLeft = new LowPassFilter(15);
+        Logger.LogInformation("Loading configuration...");
+
+        var config = LoadConfig();
+
+        Logger.LogInformation($"Configuration: {JsonSerializer.Serialize(config)}");
+
+        if (config.NoiseFilterSamples > 0)
+        {
+            Logger.LogInformation("Creating noise filters...");
+
+            _noiseFilterRight = new LowPassFilter(config.NoiseFilterSamples);
+            _noiseFilterLeft = new LowPassFilter(config.NoiseFilterSamples);
+        }
 
         Logger.LogInformation("Try use BrokenEye API...");
         _beClient = new BrokenEye.Client(Logger);
-        if (_beClient.Connect("127.0.0.1", 5555))
+        if (_beClient.Connect("127.0.0.1", config.BrokenEyePort))
         {
             ModuleInformation = new ModuleMetadata()
             {
@@ -156,5 +169,38 @@ public class PimaxCrystalAdvanced : ExtTrackingModule
     {
         _beClient?.Dispose();
         _tobiiClient?.Dispose();
+    }
+
+    public class Config
+    {
+        [JsonInclude]
+        [JsonPropertyName("noise_filter_samples")]
+        public int NoiseFilterSamples = 15;
+
+        [JsonInclude]
+        [JsonPropertyName("brokeneye_port")]
+        public int BrokenEyePort = 5555;
+    }
+
+    private Config LoadConfig()
+    {
+        const string filePath = "config.json";
+        var assemblyPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        if (assemblyPath == null)
+        {
+            Logger.LogError("Failed to get assembly path to load configuration.");
+            return new Config();
+        }
+
+        try
+        {
+            var jsonString = File.ReadAllText(Path.Combine(assemblyPath, filePath));
+            return JsonSerializer.Deserialize<Config>(jsonString) ?? new Config();
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError($"Failed to load configuration: {ex.Message}");
+            return new Config();
+        }
     }
 }

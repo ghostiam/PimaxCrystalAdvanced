@@ -33,6 +33,10 @@
         <AdditionalFiles Include="module.json">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </AdditionalFiles>
+        <None Remove="config.json"/>
+        <AdditionalFiles Include="config.json">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </AdditionalFiles>
         <None Remove="tobii_stream_engine.dll"/>
         <AdditionalFiles Include="tobii_stream_engine.dll">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>

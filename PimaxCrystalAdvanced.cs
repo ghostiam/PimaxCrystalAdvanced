@@ -17,17 +17,17 @@ public class PimaxCrystalAdvanced : ExtTrackingModule
     public override (bool eyeSuccess, bool expressionSuccess) Initialize(bool eyeAvailable,
         bool expressionAvailable)
     {
-        ModuleInformation = new ModuleMetadata()
-        {
-            Name = "BrokenEye",
-        };
-
         Logger.LogInformation("Initializing module...");
 
         Logger.LogInformation("Try use BrokenEye API...");
         _beClient = new BrokenEye.Client(Logger);
         if (_beClient.Connect("127.0.0.1", 5555))
         {
+            ModuleInformation = new ModuleMetadata()
+            {
+                Name = "BrokenEye",
+            };
+
             Logger.LogInformation("Connected to Broken Eye server!");
 
             _beClient.OnData += UpdateEyeData;
@@ -41,6 +41,11 @@ public class PimaxCrystalAdvanced : ExtTrackingModule
         _tobiiClient = new Tobii.Client(Logger);
         if (_tobiiClient.Connect())
         {
+            ModuleInformation = new ModuleMetadata()
+            {
+                Name = "PimaxCrystalAdvanced",
+            };
+
             Logger.LogInformation("Connected to Tobii API!");
 
             _tobiiClient.OnData += UpdateEyeData;
@@ -70,12 +75,6 @@ public class PimaxCrystalAdvanced : ExtTrackingModule
 
         var data = task.Result;
 
-        if (data.Left.GazeDirectionIsValid)
-            UnifiedTracking.Data.Eye.Left.Gaze = data.Left.GazeDirection.ToVRCFT().FlipXCoordinates();
-
-        if (data.Right.GazeDirectionIsValid)
-            UnifiedTracking.Data.Eye.Right.Gaze = data.Right.GazeDirection.ToVRCFT().FlipXCoordinates();
-
         if (data.Left.OpennessIsValid)
         {
             noiseFilterLeft.FilterValue(ref data.Left.Openness);
@@ -87,6 +86,12 @@ public class PimaxCrystalAdvanced : ExtTrackingModule
             noiseFilterRight.FilterValue(ref data.Right.Openness);
             UnifiedTracking.Data.Eye.Right.Openness = noiseFilterRight.Value;
         }
+
+        if (data.Left.GazeDirectionIsValid)
+            UnifiedTracking.Data.Eye.Left.Gaze = data.Left.GazeDirection.ToVRCFT().FlipXCoordinates();
+
+        if (data.Right.GazeDirectionIsValid)
+            UnifiedTracking.Data.Eye.Right.Gaze = data.Right.GazeDirection.ToVRCFT().FlipXCoordinates();
 
         if (data.Left.PupilDiameterIsValid)
             UnifiedTracking.Data.Eye.Left.PupilDiameter_MM = data.Left.PupilDiameterMm;

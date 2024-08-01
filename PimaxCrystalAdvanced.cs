@@ -10,9 +10,8 @@ public class PimaxCrystalAdvanced : ExtTrackingModule
 {
     private BrokenEye.Client? _beClient;
     private Tobii.Client? _tobiiClient;
-    private bool beConnected = false;
-    private static readonly LowPassFilter noiseFilterRight = new(15);
-    private static readonly LowPassFilter noiseFilterLeft = new(15);
+    private LowPassFilter? _noiseFilterRight;
+    private LowPassFilter? _noiseFilterLeft;
 
     public override (bool SupportsEye, bool SupportsExpression) Supported => (true, false);
 
@@ -21,12 +20,13 @@ public class PimaxCrystalAdvanced : ExtTrackingModule
     {
         Logger.LogInformation("Initializing module...");
 
+        _noiseFilterRight = new LowPassFilter(15);
+        _noiseFilterLeft = new LowPassFilter(15);
+
         Logger.LogInformation("Try use BrokenEye API...");
         _beClient = new BrokenEye.Client(Logger);
         if (_beClient.Connect("127.0.0.1", 5555))
         {
-            beConnected = true;
-
             ModuleInformation = new ModuleMetadata()
             {
                 Name = "BrokenEye",
@@ -79,31 +79,33 @@ public class PimaxCrystalAdvanced : ExtTrackingModule
 
         var data = task.Result;
 
-        if (beConnected)
+        if (data.Left.GazeDirectionIsValid)
+            UnifiedTracking.Data.Eye.Left.Gaze = data.Left.GazeDirection.ToVRCFT().FlipXCoordinates();
+
+        if (data.Right.GazeDirectionIsValid)
+            UnifiedTracking.Data.Eye.Right.Gaze = data.Right.GazeDirection.ToVRCFT().FlipXCoordinates();
+
+        if (_beClient?.IsConnected() ?? false)
         {
+            var leftOpenness = data.Left.Openness;
+            if (_noiseFilterLeft != null)
+                leftOpenness = _noiseFilterLeft.FilterValue(leftOpenness);
+
+            var rightOpenness = data.Right.Openness;
+            if (_noiseFilterRight != null)
+                rightOpenness = _noiseFilterRight.FilterValue(rightOpenness);
+
             if (data.Left.OpennessIsValid)
-            {
-                noiseFilterLeft.FilterValue(ref data.Left.Openness);
-                UnifiedTracking.Data.Eye.Left.Openness = noiseFilterLeft.Value;
-            }
+                UnifiedTracking.Data.Eye.Left.Openness = leftOpenness;
 
             if (data.Right.OpennessIsValid)
-            {
-                noiseFilterRight.FilterValue(ref data.Right.Openness);
-                UnifiedTracking.Data.Eye.Right.Openness = noiseFilterRight.Value;
-            }
+                UnifiedTracking.Data.Eye.Right.Openness = rightOpenness;
         }
         else
         {
             UnifiedTracking.Data.Eye.Left.Openness = data.Left.OpennessIsValid ? data.Left.Openness : 1f;
             UnifiedTracking.Data.Eye.Right.Openness = data.Right.OpennessIsValid ? data.Right.Openness : 1f;
         }
-
-        if (data.Left.GazeDirectionIsValid)
-            UnifiedTracking.Data.Eye.Left.Gaze = data.Left.GazeDirection.ToVRCFT().FlipXCoordinates();
-
-        if (data.Right.GazeDirectionIsValid)
-            UnifiedTracking.Data.Eye.Right.Gaze = data.Right.GazeDirection.ToVRCFT().FlipXCoordinates();
 
         if (data.Left.PupilDiameterIsValid)
             UnifiedTracking.Data.Eye.Left.PupilDiameter_MM = data.Left.PupilDiameterMm;
@@ -148,11 +150,6 @@ public class PimaxCrystalAdvanced : ExtTrackingModule
         data[7].Weight = external.Left.Squeeze;
         data[4].Weight = external.Right.Squeeze;
         data[6].Weight = external.Right.Squeeze;
-    }
-
-    private static Vector2 ToVrcftVector2(EyeData.Vector2 v)
-    {
-        return new Vector2(v.X, v.Y);
     }
 
     public override void Teardown()

@@ -170,4 +170,9 @@ public class Client : IDisposable
         _cancellationTokenSource.Cancel();
         _client?.Close();
     }
+
+    public bool IsConnected()
+    {
+        return  _client?.Connected ?? false;
+    }
 }

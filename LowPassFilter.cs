@@ -8,47 +8,37 @@ namespace PimaxCrystalAdvanced
 {
     public class LowPassFilter
     {
-
-        private readonly float[] samples;
-        private int index = 0;
-
-        private float _Value;
-
-        public float Value
-        {
-            get => _Value;
-            set => FilterValue(ref value);
-        }
+        private readonly float[] _samples;
+        private int _index;
 
         public LowPassFilter(int count)
         {
-            samples = new float[count - 1];
-            for (int i = 0; i < count - 1; i++)
+            _samples = new float[count - 1];
+            for (var i = 0; i < count - 1; i++)
             {
-                samples[i] = 0.0f;
+                _samples[i] = 0.0f;
             }
         }
 
         private float Sum()
         {
             float weight = 0;
-            foreach (var sample in samples)
+            foreach (var sample in _samples)
             {
                 weight += sample;
             }
             return weight;
         }
 
-
-        public void FilterValue(ref float NewValue)
+        public float FilterValue(float newValue)
         {
-            _Value = Sum() / samples.Length;
+            _index++;
+            if (_samples.Length == _index)
+                _index = 0;
 
-            index++;
-            if (samples.Length == index)
-                index = 0;
+            _samples[_index] = newValue;
 
-            samples[index] = NewValue;
+            return Sum() / _samples.Length;
         }
     }
 }

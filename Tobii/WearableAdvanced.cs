@@ -67,7 +67,7 @@ public class WearableAdvanced : ITobiiEyeData
         {
             GazeDirectionIsValid = dataLeft.gaze_direction_validity == tobii_validity_t.TOBII_VALIDITY_VALID,
             GazeDirection = new EyeData.Vector2(
-                -dataLeft.gaze_direction_normalized_xyz.x,
+                dataLeft.gaze_direction_normalized_xyz.x,
                 dataLeft.gaze_direction_normalized_xyz.y
             ),
             PupilDiameterIsValid = dataLeft.pupil_diameter_validity == tobii_validity_t.TOBII_VALIDITY_VALID,
@@ -81,7 +81,7 @@ public class WearableAdvanced : ITobiiEyeData
         {
             GazeDirectionIsValid = dataRight.gaze_direction_validity == tobii_validity_t.TOBII_VALIDITY_VALID,
             GazeDirection = new EyeData.Vector2(
-                -dataRight.gaze_direction_normalized_xyz.x,
+                dataRight.gaze_direction_normalized_xyz.x,
                 dataRight.gaze_direction_normalized_xyz.y
             ),
             PupilDiameterIsValid = dataRight.pupil_diameter_validity == tobii_validity_t.TOBII_VALIDITY_VALID,

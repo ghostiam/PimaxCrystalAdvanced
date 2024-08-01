@@ -66,7 +66,7 @@ public class WearableConsumer : ITobiiEyeData
         {
             GazeDirectionIsValid = data.gaze_direction_combined_validity == tobii_validity_t.TOBII_VALIDITY_VALID,
             GazeDirection = new EyeData.Vector2(
-                -data.gaze_direction_combined_normalized_xyz.x,
+                data.gaze_direction_combined_normalized_xyz.x,
                 data.gaze_direction_combined_normalized_xyz.y
             ),
             OpennessIsValid = data.left.blink_validity == tobii_validity_t.TOBII_VALIDITY_VALID,
@@ -77,7 +77,7 @@ public class WearableConsumer : ITobiiEyeData
         {
             GazeDirectionIsValid = data.gaze_direction_combined_validity == tobii_validity_t.TOBII_VALIDITY_VALID,
             GazeDirection = new EyeData.Vector2(
-                -data.gaze_direction_combined_normalized_xyz.x,
+                data.gaze_direction_combined_normalized_xyz.x,
                 data.gaze_direction_combined_normalized_xyz.y
             ),
             OpennessIsValid = data.right.blink_validity == tobii_validity_t.TOBII_VALIDITY_VALID,

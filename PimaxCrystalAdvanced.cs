@@ -10,8 +10,10 @@ public class PimaxCrystalAdvanced : ExtTrackingModule
 {
     private BrokenEye.Client? _beClient;
     private Tobii.Client? _tobiiClient;
+    private bool beConnected = false;
     private static readonly LowPassFilter noiseFilterRight = new(15);
     private static readonly LowPassFilter noiseFilterLeft = new(15);
+
     public override (bool SupportsEye, bool SupportsExpression) Supported => (true, false);
 
     public override (bool eyeSuccess, bool expressionSuccess) Initialize(bool eyeAvailable,
@@ -23,6 +25,8 @@ public class PimaxCrystalAdvanced : ExtTrackingModule
         _beClient = new BrokenEye.Client(Logger);
         if (_beClient.Connect("127.0.0.1", 5555))
         {
+            beConnected = true;
+
             ModuleInformation = new ModuleMetadata()
             {
                 Name = "BrokenEye",
@@ -75,16 +79,24 @@ public class PimaxCrystalAdvanced : ExtTrackingModule
 
         var data = task.Result;
 
-        if (data.Left.OpennessIsValid)
+        if (beConnected)
         {
-            noiseFilterLeft.FilterValue(ref data.Left.Openness);
-            UnifiedTracking.Data.Eye.Left.Openness = noiseFilterLeft.Value;
-        }
+            if (data.Left.OpennessIsValid)
+            {
+                noiseFilterLeft.FilterValue(ref data.Left.Openness);
+                UnifiedTracking.Data.Eye.Left.Openness = noiseFilterLeft.Value;
+            }
 
-        if (data.Right.OpennessIsValid)
+            if (data.Right.OpennessIsValid)
+            {
+                noiseFilterRight.FilterValue(ref data.Right.Openness);
+                UnifiedTracking.Data.Eye.Right.Openness = noiseFilterRight.Value;
+            }
+        }
+        else
         {
-            noiseFilterRight.FilterValue(ref data.Right.Openness);
-            UnifiedTracking.Data.Eye.Right.Openness = noiseFilterRight.Value;
+            UnifiedTracking.Data.Eye.Left.Openness = data.Left.OpennessIsValid ? data.Left.Openness : 1f;
+            UnifiedTracking.Data.Eye.Right.Openness = data.Right.OpennessIsValid ? data.Right.Openness : 1f;
         }
 
         if (data.Left.GazeDirectionIsValid)

@@ -16,6 +16,11 @@ public struct EyeData
 
         public float X;
         public float Y;
+
+        public VRCFaceTracking.Core.Types.Vector2 ToVRCFT()
+        {
+            return new VRCFaceTracking.Core.Types.Vector2(X, Y);
+        }
     }
 
 

@@ -1,4 +1,4 @@
-﻿namespace PimaxCrystalAdvanced.Tobii;
+﻿namespace TobiiAdvanced.Tobii;
 
 internal interface ITobiiEyeData : IDisposable
 {

@@ -4,7 +4,7 @@ using System.Text;
 using Microsoft.Extensions.Logging;
 using System.Text.Json;
 
-namespace PimaxCrystalAdvanced.BrokenEye;
+namespace TobiiAdvanced.BrokenEye;
 
 public class Client : IDisposable
 {

@@ -1,11 +1,16 @@
-## Pimax Crystal Advanced Eye Tracking Module for VRCFaceTracking
+## Tobii Advanced Eye Tracking Module for VRCFaceTracking
 
-A module for working with [Pimax Crystal](https://pimax.com/crystal/?ref=ghostiam) Eye Tracking in VRCFaceTracking.
+A module for working with Tobii Eye Tracking in VRCFaceTracking.
+
+### Supported devices
+- HP Reverb G2 Omnicept Edition.
+- Pimax Crystal.
+- and more.
 
 ### Usage
 
 - Download and install [VRCFaceTracking](https://github.com/benaclejames/VRCFaceTracking)
-- Download the archive with the module from [release](https://github.com/ghostiam/PimaxCrystalAdvanced/releases/latest)
+- Download the archive with the module from [release](https://github.com/ghostiam/VRCFTTobiiAdvanced/releases/latest)
 - Run VRCFaceTracking
 - Go to the "Module Registry" tab
 - Click "+ Install Module From .zip"
@@ -16,7 +21,7 @@ A module for working with [Pimax Crystal](https://pimax.com/crystal/?ref=ghostia
 
 > [!IMPORTANT]
 > You must have a file with a valid license, otherwise the module will not work in "advanced" mode!\
-> Or you can use the workaround: [Broken Eye](https://github.com/ghostiam/BrokenEye) (Pimax Crystal only)
+> Or you can use the workaround: [Broken Eye](https://github.com/ghostiam/BrokenEye)
 
 By default, the module is loaded without a license, which allows you to use it
 to track combined gaze direction and eye opening/closing.
@@ -47,17 +52,17 @@ After launching VRCFaceTracking, make sure that the module has loaded your licen
 
 ```
 ...
-[PimaxCrystalAdvanced] Information: Loading license...
-[PimaxCrystalAdvanced] Information: Creating device with license.
-[PimaxCrystalAdvanced] Information: Connected to platform module with build version "<version>"
-[PimaxCrystalAdvanced] Information: Subscribe to advanced data.
+[TobiiAdvanced] Information: Loading license...
+[TobiiAdvanced] Information: Creating device with license.
+[TobiiAdvanced] Information: Connected to platform module with build version "<version>"
+[TobiiAdvanced] Information: Subscribe to advanced data.
 ...
 ```
 
 If instead you see:
 
 ```
-[PimaxCrystalAdvanced] Information: No license found in <redacted>
+[TobiiAdvanced] Information: No license found in <redacted>
 ```
 
 It means the license was not found, check the path and file name.
@@ -66,7 +71,7 @@ And if you see:
 
 ```
 ...
-[PimaxCrystalAdvanced] Warning: License validation failed: TOBII_LICENSE_VALIDATION_RESULT_TAMPERED
+[TobiiAdvanced] Warning: License validation failed: TOBII_LICENSE_VALIDATION_RESULT_TAMPERED
 ...
 ```
 
@@ -84,4 +89,4 @@ There is a workaround that will allow you to obtain data on the direction of gaz
 of the pupil, and even receive images from cameras! And all this without a “professional” license!
 
 The software is called [Broken Eye](https://github.com/ghostiam/BrokenEye) and can be downloaded 
-[here](https://github.com/ghostiam/BrokenEye/releases/latest) (currently only works for Pimax Crystal).
+[here](https://github.com/ghostiam/BrokenEye/releases/latest).

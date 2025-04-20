@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PimaxCrystalAdvanced", "PimaxCrystalAdvanced.csproj", "{9DDC580F-0EAC-4695-A01A-8EA81D7952B9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TobiiAdvanced", "TobiiAdvanced.csproj", "{9DDC580F-0EAC-4695-A01A-8EA81D7952B9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -6,9 +6,9 @@ using Microsoft.Extensions.Logging;
 using VRCFaceTracking;
 using VRCFaceTracking.Core.Params.Data;
 
-namespace PimaxCrystalAdvanced;
+namespace TobiiAdvanced;
 
-public class PimaxCrystalAdvanced : ExtTrackingModule
+public class TobiiAdvanced : ExtTrackingModule
 {
     private BrokenEye.Client? _beClient;
     private Tobii.Client? _tobiiClient;
@@ -60,7 +60,7 @@ public class PimaxCrystalAdvanced : ExtTrackingModule
         {
             ModuleInformation = new ModuleMetadata()
             {
-                Name = "PimaxCrystalAdvanced",
+                Name = "TobiiAdvanced",
             };
 
             Logger.LogInformation("Connected to Tobii API!");

@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Logging;
 using Tobii.StreamEngine;
 
-namespace PimaxCrystalAdvanced.Tobii;
+namespace TobiiAdvanced.Tobii;
 
 public class Device : IDisposable
 {

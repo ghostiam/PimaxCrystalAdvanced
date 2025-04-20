@@ -1,7 +1,7 @@
 ﻿using System.Runtime.InteropServices;
 using Tobii.StreamEngine;
 
-namespace PimaxCrystalAdvanced.Tobii;
+namespace TobiiAdvanced.Tobii;
 
 public class WearableConsumer : ITobiiEyeData
 {

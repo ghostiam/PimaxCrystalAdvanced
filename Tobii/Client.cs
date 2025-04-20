@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 using Microsoft.Extensions.Logging;
 
-namespace PimaxCrystalAdvanced.Tobii;
+namespace TobiiAdvanced.Tobii;
 
 public class Client : IDisposable
 {
